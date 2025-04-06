@@ -1,35 +1,42 @@
 #Создай собственный Шутер!
-
+bg = (200, 255, 255)
 from pygame import *
 from random import randint
 from time import time as timer
 window = display.set_mode((700, 500))
 display.set_caption('шутер')
-background = transform.scale(image.color(255, 255, 255), (700,500))
-window_fill(200, 255, 255)
+
+# background.fill(bg)
 
 # mixer.init()
 # mixer.music.load('space.ogg')
 # mixer.music.play()
 
-
-# game = True
-# clock = time.Clock()
-# FPS = 60
+speed = 5
+game = True
+clock = time.Clock()
+FPS = 60
 # lost = 0
 # score = 0
 
-# class GameSprite(sprite.Sprite):
-#     def __init__(self, player_image, player_x, player_y, player_speed,size_x,size_y):
-#         super().__init__()
-#         self.image = transform.scale(image.load(player_image), (size_x,size_y))
-#         self.speed = player_speed
-#         self.rect = self.image.get_rect()
-#         self.rect.x = player_x
-#         self.rect.y = player_y
-#     def reset(self):
-#         window.blit(self.image, (self.rect.x, self.rect.y))
+class GameSprite(sprite.Sprite):
+    def __init__(self, player_image, player_y, player_speed,size_x, size_y):
+        super().__init__()
+        self.image = transform.scale(image.load(player_image), (size_x,size_y))
+        self.speed = player_speed
+        self.rect = self.image.get_rect()
+        self.rect.x = player_x
+        self.rect.y = player_y
+    def reset(self):
+        window.blit(self.image, (self.rect.x, self.rect.y))
         
+class Wall(GameSprite)
+    def update(self)
+        keys_pressed = key.get_pressed()
+        if keys_pressed[K_w] and self.rect.y > :
+            self.rect.y -= self.speed
+        if keys_pressed[K_s] and self.rect.y < 695 - 80:
+            self.rect.y += self.speed
 
 # class Player(GameSprite):
 #     def update(self):
@@ -66,8 +73,7 @@ window_fill(200, 255, 255)
 #             self.rect.y = 0
 #             self.rect.x = randint(50, 650)
 #             lost = lost + 1
-
-
+walls = wall
 # bullets = sprite.Group()
 
 # monsters = sprite.Group()
@@ -96,11 +102,11 @@ window_fill(200, 255, 255)
 # rel_time = False
 
 # num_fire = 0
-# finish = False
-# while game:
-#     for e in event.get():
-#         if e.type == QUIT:
-#             game = False
+finish = False
+while game:
+    for e in event.get():
+        if e.type == QUIT:
+            game = False
 #         elif e.type == KEYDOWN:
 #             if e.key == K_SPACE:
 #                 if num_fire < 5 and rel_time == False:
@@ -114,8 +120,11 @@ window_fill(200, 255, 255)
 #                 player.fire()
 #                 bullets.add(bullets)
 
-#     if finish != True:
-#         window.blit(background,(0, 0))
+    if finish != True:
+        window.fill(bg)
+
+
+        # window.blit(background,(0, 0))
 #         text_score = font1.render('Счёт:  ' + str(score), 1, (255, 255, 255))
 #         window.blit(text_score, (10, 10))
 
@@ -160,5 +169,5 @@ window_fill(200, 255, 255)
 #         if score >= 10:
 #             finish = True
 #             window.blit(win, (200, 200))
-#     clock.tick(FPS)
-#     display.update()
+    clock.tick(FPS)
+    display.update()
