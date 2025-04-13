@@ -6,12 +6,15 @@ from time import time as timer
 window = display.set_mode((700, 500))
 display.set_caption('шутер')
 
+
+
 # background.fill(bg)
 
 # mixer.init()
 # mixer.music.load('space.ogg')
 # mixer.music.play()
-
+speed_x = 5
+speed_y = 5
 speed = 5
 game = True
 clock = time.Clock()
@@ -20,7 +23,7 @@ FPS = 60
 # score = 0
 
 class GameSprite(sprite.Sprite):
-    def __init__(self, player_image, player_y, player_speed,size_x, size_y):
+    def __init__(self, player_image, player_y, player_x, player_speed,size_x, size_y):
         super().__init__()
         self.image = transform.scale(image.load(player_image), (size_x,size_y))
         self.speed = player_speed
@@ -30,12 +33,20 @@ class GameSprite(sprite.Sprite):
     def reset(self):
         window.blit(self.image, (self.rect.x, self.rect.y))
         
-class Wall(GameSprite)
-    def update(self)
+class Wall(GameSprite):
+    def update(self):
         keys_pressed = key.get_pressed()
-        if keys_pressed[K_w] and self.rect.y > :
+        if keys_pressed[K_w] and self.rect.y > 5:
             self.rect.y -= self.speed
-        if keys_pressed[K_s] and self.rect.y < 695 - 80:
+        if keys_pressed[K_s] and self.rect.y < 300:
+            self.rect.y += self.speed
+
+class Woll(GameSprite):
+    def update(self):
+        keys_pressed = key.get_pressed()
+        if keys_pressed[K_p] and self.rect.y > 5:
+            self.rect.y -= self.speed
+        if keys_pressed[K_l] and self.rect.y < 300:
             self.rect.y += self.speed
 
 # class Player(GameSprite):
@@ -73,12 +84,14 @@ class Wall(GameSprite)
 #             self.rect.y = 0
 #             self.rect.x = randint(50, 650)
 #             lost = lost + 1
-walls = wall
 # bullets = sprite.Group()
 
 # monsters = sprite.Group()
 
 # asteriods = sprite.Group()
+
+walls = sprite.Group()
+ball = sprite.Group()
 # for i in range(5):
 #     monster = Enemy('ufo.png', randint(50, 650), -40, randint(1,5), 50, 50)
 #     monsters.add(monster)
@@ -96,7 +109,9 @@ walls = wall
 
 # win = font1.render('YOU WIN!', True, (255, 255, 255))
 # lose = font1.render('YOU LOSE!', True, (180, 0, 0))
-
+wall1 = Wall('направо.png', 5, 0, 5, 50, 200)
+wall2 = Woll('налево.png', 5, 650, 5, 50, 200)
+ball = GameSprite('очень крутой мяч.png', 5, 300, 10, 100, 100)
 # player = Player('rocket.png', 5, 395, 5, 80, 100)
 
 # rel_time = False
@@ -107,6 +122,8 @@ while game:
     for e in event.get():
         if e.type == QUIT:
             game = False
+            ball.rect.x += speed_x
+            ball.rect.y += speed_y
 #         elif e.type == KEYDOWN:
 #             if e.key == K_SPACE:
 #                 if num_fire < 5 and rel_time == False:
@@ -122,7 +139,11 @@ while game:
 
     if finish != True:
         window.fill(bg)
+        ball.rect.x += speed_x
+        ball.rect.y += speed_y
 
+        if ball.rect.y > 450 or ball.rect.y < 0:
+                speed_y *= -1
 
         # window.blit(background,(0, 0))
 #         text_score = font1.render('Счёт:  ' + str(score), 1, (255, 255, 255))
@@ -130,11 +151,15 @@ while game:
 
 #         text_lose = font1.render('Пропущена: ' + str(lost), 1, (255, 255, 255))
 #         window.blit(text_lose, (10, 50))
-#         player.update()
+        wall1.update()
+        wall2.update()
+        ball.update()
 #         # cyborg.update()
 
 #         # cyborg.reset()
-#         player.reset()
+        wall1.reset()
+        wall2.reset()
+        ball.reset()
 
 #         # final.reset()
 #         monsters.draw(window)
@@ -155,7 +180,7 @@ while game:
 #                 num_fire = 0
 #                 rel_time = False
 
-
+    collides = sprite.groupcollide(wall1, walll2, ball, True, True)
 #         collides = sprite.groupcollide(monsters, bullets, True, True)
 #         for c in collides:
 #             score = score + 1
